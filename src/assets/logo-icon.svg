@@ -1,0 +1,339 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1">
+        <animate attributeName="stop-color"
+          values="#3b82f6;#6366f1;#3b82f6"
+          dur="4s"
+          repeatCount="indefinite" />
+      </stop>
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1">
+        <animate attributeName="stop-color"
+          values="#8b5cf6;#a855f7;#8b5cf6"
+          dur="4s"
+          repeatCount="indefinite" />
+      </stop>
+    </linearGradient>
+
+    <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Glow effect -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+      <feMerge>
+        <feMergeNode in="coloredBlur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Stronger glow for pulse -->
+    <filter id="pulseGlow">
+      <feGaussianBlur stdDeviation="5" result="coloredBlur" />
+      <feMerge>
+        <feMergeNode in="coloredBlur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Rotating background ring -->
+  <circle cx="100" cy="100" r="95" fill="none" stroke="url(#bgGradient)" stroke-width="8"
+    opacity="0.3" stroke-dasharray="20 10">
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 100 100"
+      to="360 100 100"
+      dur="20s"
+      repeatCount="indefinite" />
+  </circle>
+
+  <!-- Main background with pulse -->
+  <circle cx="100" cy="100" r="95" fill="url(#bgGradient)" opacity="0.95">
+    <animate attributeName="r"
+      values="95;97;95"
+      dur="3s"
+      repeatCount="indefinite" />
+  </circle>
+
+  <!-- Inner circle with rotation -->
+  <circle cx="100" cy="100" r="80" fill="none" stroke="white" stroke-width="2" opacity="0.3"
+    stroke-dasharray="5 5">
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 100 100"
+      to="-360 100 100"
+      dur="15s"
+      repeatCount="indefinite" />
+  </circle>
+
+  <!-- Crypto symbol (stylized C) with draw animation -->
+  <path d="M 100 40 A 45 45 0 1 0 100 160"
+    fill="none"
+    stroke="white"
+    stroke-width="8"
+    stroke-linecap="round"
+    opacity="0.9"
+    stroke-dasharray="283"
+    stroke-dashoffset="283">
+    <animate attributeName="stroke-dashoffset"
+      values="283;0;0;0;0"
+      dur="6s"
+      repeatCount="indefinite" />
+    <animate attributeName="opacity"
+      values="0;0.9;0.9;0.9;0.9"
+      dur="6s"
+      repeatCount="indefinite" />
+  </path>
+
+  <path d="M 100 50 A 35 35 0 1 0 100 150"
+    fill="none"
+    stroke="white"
+    stroke-width="3"
+    stroke-linecap="round"
+    opacity="0.6"
+    stroke-dasharray="220"
+    stroke-dashoffset="220">
+    <animate attributeName="stroke-dashoffset"
+      values="220;0;0;0;0"
+      dur="6s"
+      begin="0.2s"
+      repeatCount="indefinite" />
+    <animate attributeName="opacity"
+      values="0;0.6;0.6;0.6;0.6"
+      dur="6s"
+      begin="0.2s"
+      repeatCount="indefinite" />
+  </path>
+
+  <!-- Chart bars with sequential rise animation -->
+  <g filter="url(#glow)">
+    <rect x="65" y="140" width="8" height="0" fill="url(#chartGradient)" rx="2">
+      <animate attributeName="height"
+        values="0;20;20;20"
+        dur="3s"
+        begin="1s"
+        repeatCount="indefinite" />
+      <animate attributeName="y"
+        values="140;120;120;120"
+        dur="3s"
+        begin="1s"
+        repeatCount="indefinite" />
+    </rect>
+
+    <rect x="78" y="140" width="8" height="0" fill="url(#chartGradient)" rx="2">
+      <animate attributeName="height"
+        values="0;30;30;30"
+        dur="3s"
+        begin="1.2s"
+        repeatCount="indefinite" />
+      <animate attributeName="y"
+        values="140;110;110;110"
+        dur="3s"
+        begin="1.2s"
+        repeatCount="indefinite" />
+    </rect>
+
+    <rect x="91" y="140" width="8" height="0" fill="url(#chartGradient)" rx="2">
+      <animate attributeName="height"
+        values="0;45;45;45"
+        dur="3s"
+        begin="1.4s"
+        repeatCount="indefinite" />
+      <animate attributeName="y"
+        values="140;95;95;95"
+        dur="3s"
+        begin="1.4s"
+        repeatCount="indefinite" />
+    </rect>
+
+    <rect x="104" y="140" width="8" height="0" fill="url(#chartGradient)" rx="2">
+      <animate attributeName="height"
+        values="0;55;55;55"
+        dur="3s"
+        begin="1.6s"
+        repeatCount="indefinite" />
+      <animate attributeName="y"
+        values="140;85;85;85"
+        dur="3s"
+        begin="1.6s"
+        repeatCount="indefinite" />
+    </rect>
+
+    <rect x="117" y="140" width="8" height="0" fill="url(#chartGradient)" rx="2">
+      <animate attributeName="height"
+        values="0;65;65;65"
+        dur="3s"
+        begin="1.8s"
+        repeatCount="indefinite" />
+      <animate attributeName="y"
+        values="140;75;75;75"
+        dur="3s"
+        begin="1.8s"
+        repeatCount="indefinite" />
+    </rect>
+  </g>
+
+  <!-- Trend line with draw animation -->
+  <path d="M 65 125 L 78 115 L 91 100 L 104 90 L 117 80 L 130 75"
+    fill="none"
+    stroke="#10b981"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    opacity="0"
+    stroke-dasharray="100"
+    stroke-dashoffset="100">
+    <animate attributeName="stroke-dashoffset"
+      values="100;0;0;0"
+      dur="3s"
+      begin="2s"
+      repeatCount="indefinite" />
+    <animate attributeName="opacity"
+      values="0;0.8;0.8;0.8"
+      dur="3s"
+      begin="2s"
+      repeatCount="indefinite" />
+  </path>
+
+  <!-- Data points with sequential appearance -->
+  <circle cx="65" cy="125" r="0" fill="#10b981">
+    <animate attributeName="r"
+      values="0;3;3;3"
+      dur="3s"
+      begin="2s"
+      repeatCount="indefinite" />
+  </circle>
+  <circle cx="78" cy="115" r="0" fill="#10b981">
+    <animate attributeName="r"
+      values="0;3;3;3"
+      dur="3s"
+      begin="2.2s"
+      repeatCount="indefinite" />
+  </circle>
+  <circle cx="91" cy="100" r="0" fill="#10b981">
+    <animate attributeName="r"
+      values="0;3;3;3"
+      dur="3s"
+      begin="2.4s"
+      repeatCount="indefinite" />
+  </circle>
+  <circle cx="104" cy="90" r="0" fill="#10b981">
+    <animate attributeName="r"
+      values="0;3;3;3"
+      dur="3s"
+      begin="2.6s"
+      repeatCount="indefinite" />
+  </circle>
+  <circle cx="117" cy="80" r="0" fill="#10b981">
+    <animate attributeName="r"
+      values="0;3;3;3"
+      dur="3s"
+      begin="2.8s"
+      repeatCount="indefinite" />
+  </circle>
+
+  <!-- Final point with continuous pulse -->
+  <circle cx="130" cy="75" r="4" fill="#10b981" opacity="0" filter="url(#pulseGlow)">
+    <animate attributeName="r"
+      values="4;7;4"
+      dur="1.5s"
+      begin="3s"
+      repeatCount="indefinite" />
+    <animate attributeName="opacity"
+      values="0;1;1"
+      dur="0.5s"
+      begin="3s"
+      fill="freeze" />
+  </circle>
+
+  <!-- Outer pulse ring -->
+  <circle cx="130" cy="75" r="4" fill="none" stroke="#10b981" stroke-width="2" opacity="0">
+    <animate attributeName="r"
+      values="4;12;12"
+      dur="1.5s"
+      begin="3s"
+      repeatCount="indefinite" />
+    <animate attributeName="opacity"
+      values="0.8;0;0"
+      dur="1.5s"
+      begin="3s"
+      repeatCount="indefinite" />
+  </circle>
+
+  <!-- Sparkle effects with random timing -->
+  <circle cx="140" cy="50" r="2" fill="white" opacity="0">
+    <animate attributeName="opacity"
+      values="0;0.8;0"
+      dur="2s"
+      begin="0s;5s"
+      repeatCount="indefinite" />
+    <animate attributeName="r"
+      values="1;2;1"
+      dur="2s"
+      begin="0s;5s"
+      repeatCount="indefinite" />
+  </circle>
+
+  <circle cx="150" cy="65" r="1.5" fill="white" opacity="0">
+    <animate attributeName="opacity"
+      values="0;0.6;0"
+      dur="2.5s"
+      begin="0.5s;5.5s"
+      repeatCount="indefinite" />
+    <animate attributeName="r"
+      values="1;1.5;1"
+      dur="2.5s"
+      begin="0.5s;5.5s"
+      repeatCount="indefinite" />
+  </circle>
+
+  <circle cx="45" cy="55" r="1.5" fill="white" opacity="0">
+    <animate attributeName="opacity"
+      values="0;0.7;0"
+      dur="2.2s"
+      begin="1s;6s"
+      repeatCount="indefinite" />
+  </circle>
+
+  <circle cx="55" cy="145" r="1.5" fill="white" opacity="0">
+    <animate attributeName="opacity"
+      values="0;0.5;0"
+      dur="2.8s"
+      begin="1.5s;6.5s"
+      repeatCount="indefinite" />
+  </circle>
+
+  <!-- Dollar sign with fade in -->
+  <text x="135" y="100"
+    font-family="Arial, sans-serif"
+    font-size="24"
+    font-weight="bold"
+    fill="white"
+    opacity="0"> $ <animate attributeName="opacity"
+      values="0;0.3;0.3;0.3"
+      dur="3s"
+      begin="2.5s"
+      repeatCount="indefinite" />
+  </text>
+
+  <!-- Scanning line effect -->
+  <line x1="50" y1="60" x2="150" y2="60" stroke="white" stroke-width="1" opacity="0.2">
+    <animate attributeName="y1"
+      values="60;140;140;60"
+      dur="4s"
+      repeatCount="indefinite" />
+    <animate attributeName="y2"
+      values="60;140;140;60"
+      dur="4s"
+      repeatCount="indefinite" />
+    <animate attributeName="opacity"
+      values="0;0.3;0.3;0"
+      dur="4s"
+      repeatCount="indefinite" />
+  </line>
+</svg>
