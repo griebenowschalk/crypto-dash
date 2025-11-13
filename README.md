@@ -1,7 +1,9 @@
 # crypto-dash
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react)](https://react.dev/)
+[![React](https://img.shields.io/badge/React-19.2.0-61DAFB?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1.17-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 [![CI](https://github.com/schalkgriebenow/crypto-dash/workflows/CI/badge.svg)](https://github.com/schalkgriebenow/crypto-dash/actions)
 [![codecov](https://codecov.io/gh/schalkgriebenow/crypto-dash/branch/main/graph/badge.svg)](https://codecov.io/gh/schalkgriebenow/crypto-dash)
 
@@ -9,19 +11,32 @@ Dashboard for following crypto prices
 
 ## Tech Stack
 
-- **React 18** - UI library
-- **TypeScript** - Type safety
-- **Vite** - Build tool and dev server
-- **Vitest** - Testing framework
-- **ESLint** - Linting
-- **Prettier** - Code formatting
-- **Husky** - Git hooks
+- **React 19.2.0** - UI library
+- **TypeScript 5.9.3** - Type safety
+- **Vite 7.2.2** - Build tool and dev server
+- **Tailwind CSS 4.1.17** - Utility-first CSS framework
+- **shadcn/ui** - Re-usable component library
+- **Recharts 2.15.4** - Charting library
+- **Vitest 4.0.8** - Testing framework
+- **ESLint 9.39.1** - Linting
+- **Prettier 3.6.2** - Code formatting (with Tailwind plugin)
+- **Husky 9.1.7** - Git hooks
 - **GitHub Actions** - CI/CD
+
+## Features
+
+- **Modern UI** - Built with Tailwind CSS v4 and shadcn/ui components
+- **Dark Mode** - Full dark/light theme support with system preference detection
+- **Charts** - Interactive charts powered by Recharts
+- **Accessible** - WCAG compliant color contrasts and semantic HTML
+- **Type Safe** - Full TypeScript coverage
+- **Tested** - Comprehensive test coverage with Vitest
+- **Fast** - Optimized builds with Vite
 
 ## Prerequisites
 
-- Node.js 20 or higher
-- npm
+- Node.js 22 or higher
+- npm 11 or higher
 
 ## Setup
 
@@ -61,6 +76,7 @@ npx husky init
 2. Make your changes
 3. Pre-commit hook will automatically:
    - Run ESLint and Prettier on staged files
+   - Format Tailwind classes with prettier-plugin-tailwindcss
 4. Pre-push hook will automatically:
    - Run TypeScript type checking
 5. Push your changes

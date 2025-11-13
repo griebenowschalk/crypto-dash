@@ -32,7 +32,10 @@ export default [
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [
         'warn',
-        { allowConstantExport: true },
+        {
+          allowConstantExport: true,
+          allowExportNames: ['buttonVariants', 'cardVariants', 'chartVariants'],
+        },
       ],
       '@typescript-eslint/no-unused-vars': [
         'error',
