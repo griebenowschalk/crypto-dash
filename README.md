@@ -4,8 +4,8 @@
 [![React](https://img.shields.io/badge/React-19.2.0-61DAFB?logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1.17-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
-[![CI](https://github.com/schalkgriebenow/crypto-dash/actions/workflows/cy.yml/badge.svg)](https://github.com/schalkgriebenow/crypto-dash/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/schalkgriebenow/crypto-dash/badge.svg)](https://codecov.io/gh/schalkgriebenow/crypto-dash)
+[![CI](https://github.com/griebenowschalk/crypto-dash/actions/workflows/ci.yml/badge.svg)](https://github.com/griebenowschalk/crypto-dash/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/schalkgriebenow/crypto-dash/badge.svg)](https://codecov.io/github/griebenowschalk/crypto-dash)
 
 Dashboard for following crypto prices
 
