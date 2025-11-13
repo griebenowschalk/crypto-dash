@@ -125,9 +125,12 @@ class CryptoCompareAPI {
     return data;
   }
 
-  async getTopCoins(currency: Currency): Promise<CoinInfo[]> {
+  async getTopCoins(
+    limit: number = 10,
+    currency: Currency
+  ): Promise<CoinInfo[]> {
     const data = await this.fetchData<CoinListResponse>('/all/coinlist', {
-      limit: '10',
+      limit: limit.toString(),
       tsym: currency,
     });
     return Object.values(data.Data).map(coin => ({
