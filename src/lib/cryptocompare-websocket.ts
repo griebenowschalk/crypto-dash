@@ -3,12 +3,25 @@ import { WebSocketPriceUpdate } from '@/types/crypto';
 const API_KEY = import.meta.env.VITE_CRYPTOCOMPARE_API_KEY;
 const BASE_URL = 'wss://streamer.cryptocompare.com/v2';
 
+/**
+ * CryptoCompare WebSocket API
+ * https://developers.coindesk.com/documentation/legacy-websockets/HowToConnect
+ *
+ * Callback subscription pattern example:
+ *
+ * "BTC-USD": [callback1, callback2, callback3]
+ * "ETH-USD": [callback4, callback5]
+ * "SOL-USD": [callback6]
+ *
+ * When a trade update is received for "BTC-USD", all callbacks in the "BTC-USD" array will be called with the trade update data.
+ */
+
 class CryptoCompareWebSocket {
   private apiKey: string;
   private ws: WebSocket | null = null;
   private subscriptions: Map<
     string,
-    Set<(data: WebSocketPriceUpdate) => void>
+    Set<(data: WebSocketPriceUpdate) => void> // callback for each subscription
   > = new Map();
   private subscribeChannels: Set<string> = new Set();
   private reconnectionAttempts = 0;
@@ -40,11 +53,14 @@ class CryptoCompareWebSocket {
     this.ws.onmessage = event => {
       const data = JSON.parse(event.data) as WebSocketPriceUpdate;
 
+      // 5 is trade updates
       if (data.TYPE === '5' && data.FROMSYMBOL && data.TOSYMBOL) {
         const key = `${data.FROMSYMBOL}-${data.TOSYMBOL}`;
-        const subscribers = this.subscriptions.get(key);
-        if (subscribers) {
-          subscribers.forEach(subscriber => subscriber(data));
+        const callbacks = this.subscriptions.get(key);
+
+        // call all callbacks for this subscription
+        if (callbacks) {
+          callbacks.forEach(callback => callback(data));
         }
       }
     };
@@ -67,11 +83,19 @@ class CryptoCompareWebSocket {
     }
   }
 
+  /**
+   * Subscribe to real-time price updates for one or more coins.
+   *
+   * @param coins - Array of coin symbols (e.g., ['BTC', 'ETH'])
+   * @param currency - Target currency (e.g., 'USD')
+   * @param callback - Function called when price updates arrive
+   * @returns Unsubscribe function - call to remove this subscription
+   */
   subscribe(
     coins: string[],
     currency: string,
     callback: (data: WebSocketPriceUpdate) => void
-  ): void {
+  ): () => void {
     coins.forEach(coin => {
       const key = `${coin}-${currency}`;
 
@@ -93,36 +117,32 @@ class CryptoCompareWebSocket {
         );
       }
     });
-  }
 
-  unsubscribe(
-    coins: string[],
-    currency: string,
-    callback: (data: WebSocketPriceUpdate) => void
-  ): void {
-    coins.forEach(coin => {
-      const key = `${coin}-${currency}`;
-      const callbacks = this.subscriptions.get(key);
+    return () => {
+      coins.forEach(coin => {
+        const key = `${coin}-${currency}`;
+        const callbacks = this.subscriptions.get(key);
 
-      if (callbacks) {
-        callbacks.delete(callback);
+        if (callbacks) {
+          callbacks.delete(callback);
 
-        if (callbacks.size === 0) {
-          this.subscriptions.delete(key);
-          const channel = `5~CCCAGG~${coin}~${currency}`;
-          this.subscribeChannels.delete(channel);
+          if (callbacks.size === 0) {
+            this.subscriptions.delete(key);
+            const channel = `5~CCCAGG~${coin}~${currency}`;
+            this.subscribeChannels.delete(channel);
 
-          if (this.ws?.readyState === WebSocket.OPEN) {
-            this.ws?.send(
-              JSON.stringify({
-                action: 'SubRemove',
-                subs: [channel],
-              })
-            );
+            if (this.ws?.readyState === WebSocket.OPEN) {
+              this.ws?.send(
+                JSON.stringify({
+                  action: 'SubRemove',
+                  subs: [channel],
+                })
+              );
+            }
           }
         }
-      }
-    });
+      });
+    };
   }
 
   disconnect() {
