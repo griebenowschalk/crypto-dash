@@ -1,4 +1,4 @@
-import usePWAInstall from '@/hooks/use-pwa-install';
+import usePWAInstall from '@/hooks/usePWAInstall';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 
