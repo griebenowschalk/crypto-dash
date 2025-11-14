@@ -12,7 +12,7 @@
 
 import {
   CoinInfo,
-  CoinPrice,
+  PriceRaw,
   type CoinListResponse,
   Currency,
   CoinPriceResponse,
@@ -89,7 +89,7 @@ class CryptoCompareAPI {
   async getMultiplePrices(
     symbols: string[],
     currency: Currency
-  ): Promise<Record<string, CoinPrice>> {
+  ): Promise<Record<string, PriceRaw>> {
     const data = await this.fetchData<CoinPriceResponse>('/pricemultifull', {
       fsyms: symbols.join(','),
       tsyms: currency,
@@ -97,7 +97,7 @@ class CryptoCompareAPI {
     return data.Data;
   }
 
-  async getPrice(symbol: string, currency: Currency): Promise<CoinPrice> {
+  async getPrice(symbol: string, currency: Currency): Promise<PriceRaw> {
     const data = await this.fetchData<CoinPriceResponse>('/pricemultifull', {
       fsym: symbol,
       tsyms: currency,

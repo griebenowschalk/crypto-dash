@@ -1,4 +1,4 @@
-import { WebSocketPriceUpdate } from '@/types/crypto';
+import { PriceRaw } from '@/types/crypto';
 
 const API_KEY = import.meta.env.VITE_CRYPTOCOMPARE_API_KEY;
 const BASE_URL = 'wss://streamer.cryptocompare.com/v2';
@@ -21,7 +21,7 @@ class CryptoCompareWebSocket {
   private ws: WebSocket | null = null;
   private subscriptions: Map<
     string,
-    Set<(data: WebSocketPriceUpdate) => void> // callback for each subscription
+    Set<(data: PriceRaw) => void> // callback for each subscription
   > = new Map();
   private subscribeChannels: Set<string> = new Set();
   private reconnectionAttempts = 0;
@@ -51,7 +51,7 @@ class CryptoCompareWebSocket {
     };
 
     this.ws.onmessage = event => {
-      const data = JSON.parse(event.data) as WebSocketPriceUpdate;
+      const data = JSON.parse(event.data) as PriceRaw;
 
       // 5 is trade updates
       if (data.TYPE === '5' && data.FROMSYMBOL && data.TOSYMBOL) {
@@ -94,7 +94,7 @@ class CryptoCompareWebSocket {
   subscribe(
     coins: string[],
     currency: string,
-    callback: (data: WebSocketPriceUpdate) => void
+    callback: (data: PriceRaw) => void
   ): () => void {
     coins.forEach(coin => {
       const key = `${coin}-${currency}`;

@@ -38,7 +38,7 @@ export interface FavoriteCoinsState {
 export interface CoinPriceResponse {
   Response: string;
   Message: string;
-  Data: Record<string, CoinPrice>;
+  Data: Record<string, PriceRaw>;
 }
 
 export interface CoinListResponse {
@@ -55,7 +55,7 @@ export interface CoinListResponse {
   >;
 }
 
-export interface WebSocketPriceUpdate {
+export interface PriceRaw {
   TYPE: string;
   FROMSYMBOL: string;
   TOSYMBOL: string;
@@ -67,4 +67,5 @@ export interface WebSocketPriceUpdate {
   VOLUME24HOURTO?: number;
   LASTUPDATE?: number;
   OPEN24HOUR?: number;
+  MKTCAP?: number;
 }
