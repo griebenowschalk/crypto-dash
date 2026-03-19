@@ -35,12 +35,13 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:coverage
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+      - name: Upload coverage reports
+        if: success()
+        uses: codecov/codecov-action@v5
         with:
+          files: ./coverage/lcov.info
+          verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/coverage-final.json
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: false
+          slug: griebenowschalk/crypto-dash
+          fail_ci_if_error: true
 
