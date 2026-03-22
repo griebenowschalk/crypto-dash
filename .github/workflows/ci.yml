@@ -42,5 +42,6 @@ jobs:
           files: ./coverage/lcov.info
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
+          slug: griebenowschalk/crypto-dash
           fail_ci_if_error: true
 

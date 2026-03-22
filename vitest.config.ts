@@ -19,7 +19,7 @@ export default defineConfig({
     setupFiles: ['./src/__test__/setup.ts'],
     exclude: ['**/node_modules/**', '**/dist/**', 'docs/**'],
     coverage: {
-      provider: 'v8',
+      provider: 'istanbul',
       reporter: ['text', 'json', 'html', 'lcov'],
       exclude: [
         ...coverageConfigDefaults.exclude,
