@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
 
 // Mock matchMedia for theme detection
 Object.defineProperty(window, 'matchMedia', {
@@ -13,7 +13,7 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: () => {},
     dispatchEvent: () => {},
   }),
-})
+});
 
 // Mock localStorage
 const localStorageMock = {
@@ -21,7 +21,7 @@ const localStorageMock = {
   setItem: () => {},
   removeItem: () => {},
   clear: () => {},
-}
+};
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
-})
+});
