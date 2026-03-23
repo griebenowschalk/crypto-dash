@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
 import { getFavourites, setFavourites } from '@/lib/local-storage';
-import { FavoriteCoinsState } from '@/types/crypto';
+import { FavouriteCoinsState } from '@/types/crypto';
 
 const MAX_FAVOURITES = 10;
 const DEFAULT_FAVOURITES = ['BTC', 'ETH', 'XMR'];
 
 export function useFavouriteCoins() {
-  const [state, setState] = useState<FavoriteCoinsState>(() => {
+  const [state, setState] = useState<FavouriteCoinsState>(() => {
     const savedFavourites = getFavourites();
 
     return (
       savedFavourites || {
-        favorites: DEFAULT_FAVOURITES,
-        currentFavorite: DEFAULT_FAVOURITES[0],
+        favourites: DEFAULT_FAVOURITES,
+        currentFavourite: DEFAULT_FAVOURITES[0],
       }
     );
   });
@@ -24,69 +24,94 @@ export function useFavouriteCoins() {
     setFavourites(state);
   }, [state]);
 
-  const addFavorite = (coin: string) => {
-    if (state.favorites.includes(coin)) return;
-    if (state.favorites.length >= MAX_FAVOURITES) return;
+  const addFavourite = (coin: string) => {
+    if (state.favourites.includes(coin)) return;
+    if (state.favourites.length >= MAX_FAVOURITES) return;
     setState({
       ...state,
-      favorites: [...state.favorites, coin],
+      favourites: [...state.favourites, coin],
     });
   };
 
-  const removeFavorite = (coin: string) => {
+  const removeFavourite = (coin: string) => {
     setState(prevState => {
-      const newFavorites = prevState.favorites.filter(c => c !== coin);
-      const currentFavorite =
-        prevState.currentFavorite === coin
-          ? newFavorites[0] || ''
-          : prevState.currentFavorite;
+      const newFavourites = prevState.favourites.filter(c => c !== coin);
+      const currentFavourite =
+        prevState.currentFavourite === coin
+          ? newFavourites[0] || ''
+          : prevState.currentFavourite;
 
       return {
         ...prevState,
-        favorites: newFavorites,
-        currentFavorite,
+        favourites: newFavourites,
+        currentFavourite,
       };
     });
   };
 
-  const setCurrentFavorite = (coin: string) => {
-    if (!isFavorite(coin)) return;
+  const setCurrentFavourite = (coin: string) => {
+    if (!isFavourite(coin)) return;
 
     setState(prevState => {
       return {
         ...prevState,
-        currentFavorite: coin,
+        currentFavourite: coin,
       };
     });
   };
 
-  const containsFavorite = () => {
-    if (state.favorites.length === 0) return;
+  const containsFavourite = () => {
+    if (state.favourites.length === 0) return;
 
     setFirstVisit(false);
     setFavourites(state);
   };
 
-  const resetFavorites = () => {
+  const resetFavourites = () => {
     setState({
-      favorites: DEFAULT_FAVOURITES,
-      currentFavorite: DEFAULT_FAVOURITES[0],
+      favourites: DEFAULT_FAVOURITES,
+      currentFavourite: DEFAULT_FAVOURITES[0],
     });
   };
 
-  const isFavorite = (coin: string) => {
-    return state.favorites.includes(coin);
+  const isFavourite = (coin: string) => {
+    return state.favourites.includes(coin);
+  };
+
+  const toggleFavourite = (coin: string) => {
+    setState(prevState => {
+      if (prevState.favourites.includes(coin)) {
+        const newFavourites = prevState.favourites.filter(c => c !== coin);
+        const currentFavourite =
+          prevState.currentFavourite === coin
+            ? newFavourites[0] || ''
+            : prevState.currentFavourite;
+        return {
+          ...prevState,
+          favourites: newFavourites,
+          currentFavourite,
+        };
+      }
+      if (prevState.favourites.length >= MAX_FAVOURITES) {
+        return prevState;
+      }
+      return {
+        ...prevState,
+        favourites: [...prevState.favourites, coin],
+      };
+    });
   };
 
   return {
-    favorites: state.favorites,
-    currentFavorite: state.currentFavorite,
+    favourites: state.favourites,
+    currentFavourite: state.currentFavourite,
     firstVisit,
-    addFavorite,
-    removeFavorite,
-    setCurrentFavorite,
-    resetFavorites,
-    isFavorite,
-    containsFavorite,
+    addFavourite,
+    removeFavourite,
+    toggleFavourite,
+    setCurrentFavourite,
+    resetFavourites,
+    isFavourite,
+    containsFavourite,
   };
 }

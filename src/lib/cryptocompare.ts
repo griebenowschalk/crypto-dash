@@ -117,12 +117,15 @@ class CryptoCompareAPI {
       day: '/v2/histoday',
     };
     const endpoint = endpoints[timeframe];
-    const data = await this.fetchData<HistoricalDataPoint[]>(endpoint, {
-      fsym: symbol,
-      tsym: currency,
-      limit: limit.toString(),
-    });
-    return data;
+    const data = await this.fetchData<{ Data?: HistoricalDataPoint[] }>(
+      endpoint,
+      {
+        fsym: symbol,
+        tsym: currency,
+        limit: limit.toString(),
+      }
+    );
+    return Array.isArray(data.Data) ? data.Data : [];
   }
 
   async getTopCoins(

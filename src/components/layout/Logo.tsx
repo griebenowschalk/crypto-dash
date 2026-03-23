@@ -1,6 +1,12 @@
-export function Logo() {
+import { cn } from '@/lib/utils';
+
+interface LogoProps {
+  className?: string;
+}
+
+export function Logo({ className }: LogoProps) {
   return (
-    <div className="flex items-center gap-3">
+    <div className={cn('flex items-center gap-3', className)}>
       {/* Animated icon - same as before */}
       <div className="relative h-12 w-12 flex-shrink-0">
         <svg viewBox="0 0 200 200" className="h-full w-full">

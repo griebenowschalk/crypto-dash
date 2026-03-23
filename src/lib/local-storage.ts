@@ -1,27 +1,27 @@
-import { FavoriteCoinsState } from '@/types/crypto';
+import { FavouriteCoinsState } from '@/types/crypto';
 
-const FAVORITE_COINS_KEY = 'favorite-coins';
+const FAVOURITE_COINS_KEY = 'favourite-coins';
 
 export function clearFavourites(): void {
-  localStorage.removeItem(FAVORITE_COINS_KEY);
+  localStorage.removeItem(FAVOURITE_COINS_KEY);
 }
 
-export function getFavourites(): FavoriteCoinsState {
+export function getFavourites(): FavouriteCoinsState {
   try {
-    const favourites = localStorage.getItem(FAVORITE_COINS_KEY);
+    const favourites = localStorage.getItem(FAVOURITE_COINS_KEY);
     return favourites
       ? JSON.parse(favourites)
-      : { favorites: [], currentFavorite: '' };
+      : { favourites: [], currentFavourite: '' };
   } catch (error) {
     console.error('Error getting favourites:', error);
 
-    return { favorites: [], currentFavorite: '' };
+    return { favourites: [], currentFavourite: '' };
   }
 }
 
-export function setFavourites(favourites: FavoriteCoinsState): void {
+export function setFavourites(favourites: FavouriteCoinsState): void {
   try {
-    localStorage.setItem(FAVORITE_COINS_KEY, JSON.stringify(favourites));
+    localStorage.setItem(FAVOURITE_COINS_KEY, JSON.stringify(favourites));
   } catch (error) {
     console.error('Error setting favourites:', error);
   }

@@ -39,86 +39,113 @@ describe('useFavouriteCoins', () => {
   it('starts empty when localStorage has no favourites', () => {
     const { result } = renderHook(() => useFavouriteCoins());
 
-    expect(result.current.favorites).toEqual([]);
-    expect(result.current.currentFavorite).toBe('');
+    expect(result.current.favourites).toEqual([]);
+    expect(result.current.currentFavourite).toBe('');
   });
 
-  it('addFavorite appends and respects max 10', () => {
+  it('addFavourite appends and respects max 10', () => {
     const { result } = renderHook(() => useFavouriteCoins());
 
     act(() => {
-      result.current.addFavorite('BTC');
+      result.current.addFavourite('BTC');
     });
     act(() => {
-      result.current.addFavorite('ETH');
+      result.current.addFavourite('ETH');
     });
-    expect(result.current.favorites).toEqual(['BTC', 'ETH']);
-    expect(result.current.isFavorite('BTC')).toBe(true);
+    expect(result.current.favourites).toEqual(['BTC', 'ETH']);
+    expect(result.current.isFavourite('BTC')).toBe(true);
 
     act(() => {
-      result.current.addFavorite('BTC');
+      result.current.addFavourite('BTC');
     });
-    expect(result.current.favorites).toHaveLength(2);
+    expect(result.current.favourites).toHaveLength(2);
 
     const coins = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
     for (const s of coins) {
       act(() => {
-        result.current.addFavorite(s);
+        result.current.addFavourite(s);
       });
     }
-    expect(result.current.favorites).toHaveLength(10);
+    expect(result.current.favourites).toHaveLength(10);
 
     act(() => {
-      result.current.addFavorite('TOO_MANY');
+      result.current.addFavourite('TOO_MANY');
     });
-    expect(result.current.favorites).toHaveLength(10);
-    expect(result.current.favorites).not.toContain('TOO_MANY');
+    expect(result.current.favourites).toHaveLength(10);
+    expect(result.current.favourites).not.toContain('TOO_MANY');
   });
 
-  it('removeFavorite updates currentFavorite when removing active coin', () => {
+  it('removeFavourite updates currentFavourite when removing active coin', () => {
     const { result } = renderHook(() => useFavouriteCoins());
 
     act(() => {
-      result.current.addFavorite('BTC');
+      result.current.addFavourite('BTC');
     });
     act(() => {
-      result.current.addFavorite('ETH');
+      result.current.addFavourite('ETH');
     });
     act(() => {
-      result.current.setCurrentFavorite('BTC');
+      result.current.setCurrentFavourite('BTC');
     });
-    expect(result.current.currentFavorite).toBe('BTC');
+    expect(result.current.currentFavourite).toBe('BTC');
 
     act(() => {
-      result.current.removeFavorite('BTC');
+      result.current.removeFavourite('BTC');
     });
-    expect(result.current.favorites).toEqual(['ETH']);
-    expect(result.current.currentFavorite).toBe('ETH');
+    expect(result.current.favourites).toEqual(['ETH']);
+    expect(result.current.currentFavourite).toBe('ETH');
   });
 
-  it('setCurrentFavorite only when coin is a favourite', () => {
+  it('setCurrentFavourite only when coin is a favourite', () => {
     const { result } = renderHook(() => useFavouriteCoins());
 
     act(() => {
-      result.current.addFavorite('BTC');
-      result.current.setCurrentFavorite('ETH');
+      result.current.addFavourite('BTC');
+      result.current.setCurrentFavourite('ETH');
     });
-    expect(result.current.currentFavorite).toBe('');
+    expect(result.current.currentFavourite).toBe('');
 
     act(() => {
-      result.current.setCurrentFavorite('BTC');
+      result.current.setCurrentFavourite('BTC');
     });
-    expect(result.current.currentFavorite).toBe('BTC');
+    expect(result.current.currentFavourite).toBe('BTC');
   });
 
-  it('resetFavorites restores defaults', () => {
+  it('toggleFavourite adds, removes, and respects max 10', () => {
     const { result } = renderHook(() => useFavouriteCoins());
 
     act(() => {
-      result.current.addFavorite('SOL');
-      result.current.resetFavorites();
+      result.current.toggleFavourite('BTC');
     });
-    expect(result.current.favorites).toEqual(['BTC', 'ETH', 'XMR']);
-    expect(result.current.currentFavorite).toBe('BTC');
+    expect(result.current.favourites).toContain('BTC');
+
+    act(() => {
+      result.current.toggleFavourite('BTC');
+    });
+    expect(result.current.favourites).not.toContain('BTC');
+
+    const coins = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+    for (const s of coins) {
+      act(() => {
+        result.current.toggleFavourite(s);
+      });
+    }
+    expect(result.current.favourites).toHaveLength(10);
+
+    act(() => {
+      result.current.toggleFavourite('EXTRA');
+    });
+    expect(result.current.favourites).not.toContain('EXTRA');
+  });
+
+  it('resetFavourites restores defaults', () => {
+    const { result } = renderHook(() => useFavouriteCoins());
+
+    act(() => {
+      result.current.addFavourite('SOL');
+      result.current.resetFavourites();
+    });
+    expect(result.current.favourites).toEqual(['BTC', 'ETH', 'XMR']);
+    expect(result.current.currentFavourite).toBe('BTC');
   });
 });

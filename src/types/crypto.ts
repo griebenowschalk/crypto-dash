@@ -30,9 +30,9 @@ export interface CoinInfo {
 export type TimeFrame = 'minute' | 'hour' | 'day';
 export type Currency = 'USD' | 'EUR' | 'GBP' | 'BTC' | 'ETH' | 'ZAR';
 
-export interface FavoriteCoinsState {
-  favorites: string[];
-  currentFavorite: string;
+export interface FavouriteCoinsState {
+  favourites: string[];
+  currentFavourite: string;
 }
 
 export interface CoinPriceResponse {

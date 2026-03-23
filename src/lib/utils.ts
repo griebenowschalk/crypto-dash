@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import type { TimeFrame } from '@/types/crypto';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -25,8 +26,25 @@ export function formatPercentage(value: number, decimals: number = 2): string {
   return `${value >= 0 ? '+' : ''}${value.toFixed(decimals)}%`;
 }
 
-export function formatTimestamp(timestamp: number): string {
-  return new Date(timestamp * 1000).toLocaleString('en-ZA', {
+export function formatTimestamp(
+  timestamp: number,
+  timeframe?: TimeFrame
+): string {
+  const date = new Date(timestamp * 1000);
+  if (timeframe === 'day') {
+    return date.toLocaleDateString('en-ZA', {
+      month: 'short',
+      day: 'numeric',
+    });
+  }
+  if (timeframe === 'hour') {
+    return date.toLocaleString('en-ZA', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+    });
+  }
+  return date.toLocaleString('en-ZA', {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
