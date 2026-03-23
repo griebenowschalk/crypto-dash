@@ -8,7 +8,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { H4 } from '@/components/typography';
 import { useHistoricalData } from '@/hooks/useHistoricalData';
 import {
   CHART_TIMEFRAME_PRESETS,
@@ -44,9 +45,9 @@ export function PriceChart({ symbol }: PriceChartProps) {
   return (
     <Card className="bg-card/70 border shadow-sm">
       <CardHeader className="flex flex-col gap-3 pb-2 sm:flex-row sm:items-center sm:justify-between">
-        <CardTitle className="text-base">
+        <H4 className="scroll-m-0 border-0 pb-0 text-base leading-none font-semibold">
           {symbol} / {currency}
-        </CardTitle>
+        </H4>
         <div className="bg-muted inline-flex w-fit gap-1 rounded-lg p-1">
           {CHART_TIMEFRAME_PRESETS.map(tf => (
             <button

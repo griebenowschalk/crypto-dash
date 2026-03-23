@@ -70,18 +70,20 @@ vi.mock('@/hooks/useFavouriteCoins', () => ({
 }));
 
 describe('Dashboard', () => {
-  it('renders welcome copy and top coins section', async () => {
+  it('renders dashboard copy and top coins section', async () => {
     const { Wrapper } = createQueryClientWrapper();
     render(<Dashboard />, { wrapper: Wrapper });
 
     expect(
-      await screen.findByRole('heading', { name: /welcome to cryptodash/i })
+      await screen.findByRole('heading', { name: /dashboard/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByText('Dashboard for following crypto prices.')
+      screen.getByText(
+        'Track favourites and pick a coin to feature in the chart.'
+      )
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: /top coins/i })
+      screen.getByRole('heading', { name: /your favourites|top coins/i })
     ).toBeInTheDocument();
   });
 
@@ -89,7 +91,7 @@ describe('Dashboard', () => {
     const { Wrapper } = createQueryClientWrapper();
     render(<Dashboard />, { wrapper: Wrapper });
 
-    await screen.findByRole('heading', { name: /welcome to cryptodash/i });
+    await screen.findByRole('heading', { name: /dashboard/i });
     expect(screen.getAllByText('BTC').length).toBeGreaterThan(0);
     expect(screen.getAllByText('ETH').length).toBeGreaterThan(0);
   });
@@ -98,7 +100,7 @@ describe('Dashboard', () => {
     const { Wrapper } = createQueryClientWrapper();
     render(<Dashboard />, { wrapper: Wrapper });
 
-    await screen.findByRole('heading', { name: /welcome to cryptodash/i });
+    await screen.findByRole('heading', { name: /dashboard/i });
     expect(screen.getByRole('heading', { name: /chart/i })).toBeInTheDocument();
   });
 

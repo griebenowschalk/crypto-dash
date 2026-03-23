@@ -7,7 +7,16 @@ import tsparser from '@typescript-eslint/parser';
 import prettier from 'eslint-config-prettier';
 
 export default [
-  { ignores: ['dist', 'coverage', 'node_modules', 'netlify/functions/'] },
+  {
+    ignores: [
+      'dist',
+      'coverage',
+      'node_modules',
+      'netlify/functions/',
+      'dev-dist',
+      'docs/*',
+    ],
+  },
   js.configs.recommended,
   {
     files: ['**/*.{ts,tsx}'],

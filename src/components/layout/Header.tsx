@@ -8,12 +8,14 @@ export const Header = () => {
     typeof window !== 'undefined' ? window.location.pathname : '/dashboard';
   const initialTab = pathname.startsWith('/settings')
     ? 'settings'
-    : 'dashboard';
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'settings'>(
-    initialTab
-  );
+    : pathname.startsWith('/markets')
+      ? 'markets'
+      : 'dashboard';
+  const [activeTab, setActiveTab] = useState<
+    'dashboard' | 'markets' | 'settings'
+  >(initialTab);
 
-  const styles = (tab: 'dashboard' | 'settings') =>
+  const styles = (tab: 'dashboard' | 'markets' | 'settings') =>
     cn(
       'h-auto p-2',
       activeTab === tab &&
@@ -21,19 +23,14 @@ export const Header = () => {
     );
 
   return (
-    <header className="grid grid-cols-[1fr_auto_auto] items-center gap-4 py-8">
-      <a href="/">
-        {/* <img
-          src="/src/assets/logo-horizontal-icon.svg"
-          alt="CryptoDash"
-          className="h-12 w-auto"
-          loading="lazy"
-        /> */}
+    <header className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-2 py-8 sm:gap-4">
+      <a href="/" aria-label="CryptoDash">
         <Logo />
       </a>
+
       <Button
         variant="ghost"
-        className={cn('h-auto p-2', styles('dashboard'))}
+        className={styles('dashboard')}
         onClick={() => {
           setActiveTab('dashboard');
           if (window.location.pathname !== '/dashboard') {
@@ -45,7 +42,19 @@ export const Header = () => {
       </Button>
       <Button
         variant="ghost"
-        className={cn('h-auto p-2', styles('settings'))}
+        className={styles('markets')}
+        onClick={() => {
+          setActiveTab('markets');
+          if (window.location.pathname !== '/markets') {
+            window.location.assign('/markets');
+          }
+        }}
+      >
+        Markets
+      </Button>
+      <Button
+        variant="ghost"
+        className={styles('settings')}
         onClick={() => {
           setActiveTab('settings');
           if (window.location.pathname !== '/settings') {

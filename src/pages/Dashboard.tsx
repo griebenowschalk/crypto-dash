@@ -3,8 +3,7 @@ import { PriceCard } from '@/components/crypto/PriceCard';
 import { PriceChart } from '@/components/crypto/PriceChart';
 import { Loader } from '@/components/layout/Loader';
 import { useTopCoins } from '@/hooks/useTopCoins';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { H1, P } from '@/components/typography';
+import { H1, P, SectionLabel } from '@/components/typography';
 
 export function Dashboard() {
   const { favourites, currentFavourite, setCurrentFavourite } =
@@ -14,28 +13,28 @@ export function Dashboard() {
     favourites.includes(c.symbol)
   );
   const topCoinsList = (topCoins ?? []).slice(0, 8);
+  const hasFavourites = favourites.length > 0;
+  const heading = hasFavourites ? 'Your Favourites' : 'Top Coins';
+  const displayCoins = hasFavourites ? favouriteCoins : topCoinsList;
 
   if (isLoading) return <Loader />;
 
   return (
     <div className="space-y-6 py-6">
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <H1>Welcome to CryptoDash</H1>
-          <P>Dashboard for following crypto prices.</P>
-        </div>
-        <ThemeToggle />
+      <div>
+        <H1>Dashboard</H1>
+        <P>Track favourites and pick a coin to feature in the chart.</P>
       </div>
 
       <section>
-        <h2 className="text-muted-foreground mb-3 text-sm font-medium tracking-wide uppercase">
-          Your Favourites ({favourites.length})
-        </h2>
-        {favouriteCoins.length > 0 ? (
+        <SectionLabel>
+          {heading} ({displayCoins.length})
+        </SectionLabel>
+        {displayCoins.length > 0 ? (
           <div className="grid auto-rows-fr grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {favouriteCoins.map(coin => (
+            {displayCoins.map(coin => (
               <PriceCard
-                key={`fav-${coin.symbol}`}
+                key={coin.symbol}
                 coin={coin}
                 onFeature={setCurrentFavourite}
                 isFeatured={coin.symbol === currentFavourite}
@@ -43,27 +42,16 @@ export function Dashboard() {
             ))}
           </div>
         ) : (
-          <P className="text-muted-foreground text-sm">
-            Star a coin in Top Coins to add it here.
+          <P className="text-muted-foreground mt-0 text-sm">
+            Add favourites in Settings to pin your preferred coins.
           </P>
         )}
       </section>
 
       <section>
-        <h2 className="text-muted-foreground mb-3 text-sm font-medium tracking-wide uppercase">
-          Top Coins
-        </h2>
-        <div className="grid auto-rows-fr grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {topCoinsList.map(coin => (
-            <PriceCard key={coin.symbol} coin={coin} />
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="text-muted-foreground mb-3 text-sm font-medium tracking-wide uppercase">
+        <SectionLabel>
           {currentFavourite ? `${currentFavourite} Chart` : 'Chart'}
-        </h2>
+        </SectionLabel>
         {currentFavourite ? (
           <PriceChart symbol={currentFavourite} />
         ) : (

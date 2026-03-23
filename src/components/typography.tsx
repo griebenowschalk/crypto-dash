@@ -1,10 +1,10 @@
-import { cn } from '@/lib/utils'
-import { type HTMLAttributes, type ReactNode } from 'react'
+import { cn } from '@/lib/utils';
+import { type HTMLAttributes, type ReactNode } from 'react';
 
 type TypographyProps = HTMLAttributes<HTMLElement> & {
-  children: ReactNode
-  className?: string
-}
+  children: ReactNode;
+  className?: string;
+};
 
 // Headings
 export function H1({ children, className, ...props }: TypographyProps) {
@@ -18,7 +18,7 @@ export function H1({ children, className, ...props }: TypographyProps) {
     >
       {children}
     </h1>
-  )
+  );
 }
 
 export function H2({ children, className, ...props }: TypographyProps) {
@@ -32,7 +32,7 @@ export function H2({ children, className, ...props }: TypographyProps) {
     >
       {children}
     </h2>
-  )
+  );
 }
 
 export function H3({ children, className, ...props }: TypographyProps) {
@@ -46,7 +46,7 @@ export function H3({ children, className, ...props }: TypographyProps) {
     >
       {children}
     </h3>
-  )
+  );
 }
 
 export function H4({ children, className, ...props }: TypographyProps) {
@@ -60,7 +60,7 @@ export function H4({ children, className, ...props }: TypographyProps) {
     >
       {children}
     </h4>
-  )
+  );
 }
 
 // Body text
@@ -72,7 +72,7 @@ export function P({ children, className, ...props }: TypographyProps) {
     >
       {children}
     </p>
-  )
+  );
 }
 
 export function Lead({ children, className, ...props }: TypographyProps) {
@@ -80,7 +80,7 @@ export function Lead({ children, className, ...props }: TypographyProps) {
     <p className={cn('text-muted-foreground text-xl', className)} {...props}>
       {children}
     </p>
-  )
+  );
 }
 
 export function Large({ children, className, ...props }: TypographyProps) {
@@ -88,7 +88,7 @@ export function Large({ children, className, ...props }: TypographyProps) {
     <div className={cn('text-lg font-semibold', className)} {...props}>
       {children}
     </div>
-  )
+  );
 }
 
 export function Small({ children, className, ...props }: TypographyProps) {
@@ -99,7 +99,7 @@ export function Small({ children, className, ...props }: TypographyProps) {
     >
       {children}
     </small>
-  )
+  );
 }
 
 export function Muted({ children, className, ...props }: TypographyProps) {
@@ -107,7 +107,26 @@ export function Muted({ children, className, ...props }: TypographyProps) {
     <p className={cn('text-muted-foreground text-sm', className)} {...props}>
       {children}
     </p>
-  )
+  );
+}
+
+/** Uppercase label for page sections (dashboard blocks, etc.). */
+export function SectionLabel({
+  children,
+  className,
+  ...props
+}: TypographyProps) {
+  return (
+    <h2
+      className={cn(
+        'text-muted-foreground mb-3 text-sm font-medium tracking-wide uppercase',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </h2>
+  );
 }
 
 // Specialized text
@@ -119,7 +138,7 @@ export function Blockquote({ children, className, ...props }: TypographyProps) {
     >
       {children}
     </blockquote>
-  )
+  );
 }
 
 export function Code({ children, className, ...props }: TypographyProps) {
@@ -133,7 +152,7 @@ export function Code({ children, className, ...props }: TypographyProps) {
     >
       {children}
     </code>
-  )
+  );
 }
 
 export function Pre({ children, className, ...props }: TypographyProps) {
@@ -147,7 +166,7 @@ export function Pre({ children, className, ...props }: TypographyProps) {
     >
       {children}
     </pre>
-  )
+  );
 }
 
 // Lists
@@ -156,7 +175,7 @@ export function List({ children, className, ...props }: TypographyProps) {
     <ul className={cn('my-6 ml-6 list-disc [&>li]:mt-2', className)} {...props}>
       {children}
     </ul>
-  )
+  );
 }
 
 export function ListItem({ children, className, ...props }: TypographyProps) {
@@ -164,7 +183,7 @@ export function ListItem({ children, className, ...props }: TypographyProps) {
     <li className={cn('', className)} {...props}>
       {children}
     </li>
-  )
+  );
 }
 
 // Inline elements
@@ -179,7 +198,7 @@ export function InlineCode({ children, className, ...props }: TypographyProps) {
     >
       {children}
     </code>
-  )
+  );
 }
 
 export function Strong({ children, className, ...props }: TypographyProps) {
@@ -187,7 +206,7 @@ export function Strong({ children, className, ...props }: TypographyProps) {
     <strong className={cn('font-semibold', className)} {...props}>
       {children}
     </strong>
-  )
+  );
 }
 
 export function Em({ children, className, ...props }: TypographyProps) {
@@ -195,7 +214,7 @@ export function Em({ children, className, ...props }: TypographyProps) {
     <em className={cn('italic', className)} {...props}>
       {children}
     </em>
-  )
+  );
 }
 
 // Utility components
@@ -208,7 +227,7 @@ export function TextBalance({
     <div className={cn('text-balance', className)} {...props}>
       {children}
     </div>
-  )
+  );
 }
 
 export function TextGradient({
@@ -226,5 +245,5 @@ export function TextGradient({
     >
       {children}
     </span>
-  )
+  );
 }

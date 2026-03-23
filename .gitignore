@@ -24,6 +24,9 @@ dist-ssr
 *.sw?
 .cursorrules
 
+# Storybook
+storybook-static
+
 # Testing
 coverage
 .nyc_output
@@ -51,4 +54,3 @@ registerSW.js
 **/registerSW.js
 
 .cursorrules
-docs/*

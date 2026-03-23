@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { TrendingUp, TrendingDown, Star } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Large, Muted, Small } from '@/components/typography';
 import { Sparkline } from './Sparkline';
 import { formatPrice, formatPercentage } from '@/lib/utils';
 import { useCryptoPrice } from '@/hooks/useCryptoPrice';
@@ -56,10 +57,12 @@ export function PriceCard({
                 className="h-8 w-8 rounded-full"
               />
               <div className="min-h-9 min-w-0">
-                <p className="truncate font-semibold">{coin.symbol}</p>
-                <p className="text-muted-foreground truncate text-xs">
+                <Small className="block truncate font-semibold">
+                  {coin.symbol}
+                </Small>
+                <Muted className="mt-0 truncate text-xs [&:not(:first-child)]:mt-0">
                   {coin.name}
-                </p>
+                </Muted>
               </div>
             </div>
             <button
@@ -77,11 +80,11 @@ export function PriceCard({
           </div>
 
           <div className="mb-3">
-            <p className="text-xl font-bold tracking-tight">
+            <Large className="text-xl font-bold tracking-tight">
               {priceValue !== null ? formatPrice(priceValue, currency) : '—'}
-            </p>
-            <div
-              className={`flex items-center gap-1.5 text-xs font-medium ${positive ? 'text-green-500' : 'text-red-500'}`}
+            </Large>
+            <Small
+              className={`mt-1 flex items-center gap-1.5 font-medium ${positive ? 'text-green-500' : 'text-red-500'}`}
             >
               {positive ? (
                 <TrendingUp className="h-3 w-3" />
@@ -89,7 +92,7 @@ export function PriceCard({
                 <TrendingDown className="h-3 w-3" />
               )}
               {priceValue !== null ? formatPercentage(pctValue) : '—'}
-            </div>
+            </Small>
             {onFeature && (
               <button
                 onClick={e => {

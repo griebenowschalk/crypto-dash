@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Small } from '@/components/typography';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -51,7 +52,7 @@ export function UpdateNotification() {
   return (
     <Card className="fixed right-4 bottom-4 z-50 p-4 shadow-lg">
       <div className="flex items-center gap-4">
-        <p className="text-sm">Update available</p>
+        <Small>Update available</Small>
         <Button onClick={handleUpdate} size="sm">
           Reload
         </Button>
