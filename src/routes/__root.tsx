@@ -7,11 +7,11 @@ import { UpdateNotification } from '@/components/pwa/UpdateNotification';
 export const Route = createRootRoute({
   component: () => (
     <div className="bg-background text-foreground min-h-screen">
+      <InstallPrompt />
       <Container>
         <Header />
         <Outlet />
       </Container>
-      <InstallPrompt />
       <UpdateNotification />
     </div>
   ),

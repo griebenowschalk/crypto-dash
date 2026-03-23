@@ -1,5 +1,6 @@
 import { Plus, Search, X } from 'lucide-react';
 import { H1, H4, P } from '@/components/typography';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
@@ -33,6 +34,20 @@ export function Settings() {
         <H1>Settings</H1>
         <P>Configure global preferences for CryptoDash.</P>
       </div>
+
+      <Card className="bg-card/70">
+        <CardHeader>
+          <H4 className="scroll-m-0 border-0 pb-0 text-base leading-none font-semibold">
+            Appearance
+          </H4>
+          <P className="text-muted-foreground mt-0 text-sm">
+            Toggle between light and dark mode.
+          </P>
+        </CardHeader>
+        <CardContent>
+          <ThemeToggle />
+        </CardContent>
+      </Card>
 
       <Card className="bg-card/70">
         <CardHeader>
