@@ -39,7 +39,6 @@ class CryptoCompareWebSocket {
 
     this.ws.onopen = () => {
       console.log('WebSocket connected');
-      this.reconnectionAttempts = 0;
       this.subscribeChannels.forEach(channel => {
         this.ws?.send(
           JSON.stringify({
@@ -53,12 +52,23 @@ class CryptoCompareWebSocket {
     this.ws.onmessage = event => {
       const data = JSON.parse(event.data) as PriceRaw;
 
+      if (data.TYPE === '20') {
+        // Server welcome — connection is valid, reset reconnection counter
+        console.log('WebSocket authenticated');
+        this.reconnectionAttempts = 0;
+        return;
+      }
+
+      if (data.TYPE === '500') {
+        console.error('WebSocket server error:', data);
+        return;
+      }
+
       // 5 is trade updates
       if (data.TYPE === '5' && data.FROMSYMBOL && data.TOSYMBOL) {
         const key = `${data.FROMSYMBOL}-${data.TOSYMBOL}`;
         const callbacks = this.subscriptions.get(key);
 
-        // call all callbacks for this subscription
         if (callbacks) {
           callbacks.forEach(callback => callback(data));
         }

@@ -6,15 +6,23 @@ import { formatPrice, formatPercentage } from '@/lib/utils';
 import { useCryptoPrice } from '@/hooks/useCryptoPrice';
 import { useHistoricalData } from '@/hooks/useHistoricalData';
 import { useFavouriteCoins } from '@/hooks/useFavouriteCoins';
+import { useAppCurrency } from '@/hooks/useAppCurrency';
 import type { CoinInfo, CoinPrice, PriceRaw } from '@/types/crypto';
 
 interface PriceCardProps {
   coin: CoinInfo;
+  onFeature?: (symbol: string) => void;
+  isFeatured?: boolean;
 }
 
-export function PriceCard({ coin }: PriceCardProps) {
+export function PriceCard({
+  coin,
+  onFeature,
+  isFeatured = false,
+}: PriceCardProps) {
+  const { currency } = useAppCurrency();
   const { data: price } = useCryptoPrice(coin.symbol);
-  const { data: history } = useHistoricalData(coin.symbol, undefined, 'hour');
+  const { data: history } = useHistoricalData(coin.symbol, currency, 'day');
   const { isFavourite, toggleFavourite } = useFavouriteCoins();
 
   function isCoinPrice(p: CoinPrice | PriceRaw): p is CoinPrice {
@@ -37,19 +45,21 @@ export function PriceCard({ coin }: PriceCardProps) {
 
   return (
     <Link to="/coin/$symbol" params={{ symbol: coin.symbol }}>
-      <Card className="hover:border-border/80 cursor-pointer transition-colors">
-        <CardContent className="p-4">
+      <Card className="group hover:border-border/80 hover:bg-card bg-card/70 h-full cursor-pointer border transition-all duration-200 hover:shadow-md">
+        <CardContent className="flex h-full flex-col p-4">
           <div className="mb-3 flex items-start justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex min-w-0 items-center gap-2">
               <img
                 loading="lazy"
-                src={`https://www.cryptocompare.com${coin.imageUrl}`}
+                src={coin.imageUrl}
                 alt={coin.name}
                 className="h-8 w-8 rounded-full"
               />
-              <div>
-                <p className="font-semibold">{coin.symbol}</p>
-                <p className="text-muted-foreground text-xs">{coin.name}</p>
+              <div className="min-h-9 min-w-0">
+                <p className="truncate font-semibold">{coin.symbol}</p>
+                <p className="text-muted-foreground truncate text-xs">
+                  {coin.name}
+                </p>
               </div>
             </div>
             <button
@@ -57,7 +67,8 @@ export function PriceCard({ coin }: PriceCardProps) {
                 e.preventDefault();
                 toggleFavourite(coin.symbol);
               }}
-              className="text-muted-foreground transition-colors hover:text-yellow-400"
+              className="text-muted-foreground hover:bg-muted rounded-md p-1.5 transition-colors hover:text-yellow-400"
+              aria-label={`Toggle ${coin.symbol} favourite`}
             >
               <Star
                 className={`h-4 w-4 ${isFavourite(coin.symbol) ? 'fill-yellow-400 text-yellow-400' : ''}`}
@@ -65,12 +76,12 @@ export function PriceCard({ coin }: PriceCardProps) {
             </button>
           </div>
 
-          <div className="mb-2">
-            <p className="text-lg font-bold">
-              {priceValue !== null ? formatPrice(priceValue) : '—'}
+          <div className="mb-3">
+            <p className="text-xl font-bold tracking-tight">
+              {priceValue !== null ? formatPrice(priceValue, currency) : '—'}
             </p>
             <div
-              className={`flex items-center gap-1 text-xs ${positive ? 'text-green-500' : 'text-red-500'}`}
+              className={`flex items-center gap-1.5 text-xs font-medium ${positive ? 'text-green-500' : 'text-red-500'}`}
             >
               {positive ? (
                 <TrendingUp className="h-3 w-3" />
@@ -79,9 +90,29 @@ export function PriceCard({ coin }: PriceCardProps) {
               )}
               {priceValue !== null ? formatPercentage(pctValue) : '—'}
             </div>
+            {onFeature && (
+              <button
+                onClick={e => {
+                  e.preventDefault();
+                  onFeature(coin.symbol);
+                }}
+                className={`mt-2 rounded-md border px-2 py-1 text-xs font-medium transition-colors ${
+                  isFeatured
+                    ? 'border-primary/40 bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+                aria-label={`Feature ${coin.symbol} chart`}
+              >
+                {isFeatured ? 'Featured' : 'Feature'}
+              </button>
+            )}
           </div>
 
-          {history && <Sparkline data={history} positive={positive} />}
+          {history && (
+            <div className="mt-auto border-t pt-3">
+              <Sparkline data={history} positive={positive} />
+            </div>
+          )}
         </CardContent>
       </Card>
     </Link>

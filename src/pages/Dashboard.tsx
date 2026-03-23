@@ -7,13 +7,13 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { H1, P } from '@/components/typography';
 
 export function Dashboard() {
-  const { favourites, currentFavourite } = useFavouriteCoins();
+  const { favourites, currentFavourite, setCurrentFavourite } =
+    useFavouriteCoins();
   const { data: topCoins, isLoading } = useTopCoins();
-
-  const displayCoins =
-    favourites.length > 0
-      ? (topCoins?.filter(c => favourites.includes(c.symbol)) ?? [])
-      : (topCoins?.slice(0, 6) ?? []);
+  const favouriteCoins = (topCoins ?? []).filter(c =>
+    favourites.includes(c.symbol)
+  );
+  const topCoinsList = (topCoins ?? []).slice(0, 8);
 
   if (isLoading) return <Loader />;
 
@@ -29,10 +29,32 @@ export function Dashboard() {
 
       <section>
         <h2 className="text-muted-foreground mb-3 text-sm font-medium tracking-wide uppercase">
-          {favourites.length > 0 ? 'Your Favourites' : 'Top Coins'}
+          Your Favourites ({favourites.length})
         </h2>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {displayCoins.map(coin => (
+        {favouriteCoins.length > 0 ? (
+          <div className="grid auto-rows-fr grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {favouriteCoins.map(coin => (
+              <PriceCard
+                key={`fav-${coin.symbol}`}
+                coin={coin}
+                onFeature={setCurrentFavourite}
+                isFeatured={coin.symbol === currentFavourite}
+              />
+            ))}
+          </div>
+        ) : (
+          <P className="text-muted-foreground text-sm">
+            Star a coin in Top Coins to add it here.
+          </P>
+        )}
+      </section>
+
+      <section>
+        <h2 className="text-muted-foreground mb-3 text-sm font-medium tracking-wide uppercase">
+          Top Coins
+        </h2>
+        <div className="grid auto-rows-fr grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+          {topCoinsList.map(coin => (
             <PriceCard key={coin.symbol} coin={coin} />
           ))}
         </div>
@@ -40,9 +62,15 @@ export function Dashboard() {
 
       <section>
         <h2 className="text-muted-foreground mb-3 text-sm font-medium tracking-wide uppercase">
-          {currentFavourite} Chart
+          {currentFavourite ? `${currentFavourite} Chart` : 'Chart'}
         </h2>
-        <PriceChart symbol={currentFavourite} />
+        {currentFavourite ? (
+          <PriceChart symbol={currentFavourite} />
+        ) : (
+          <P className="text-muted-foreground text-sm">
+            Select a favourite to show its chart.
+          </P>
+        )}
       </section>
     </div>
   );

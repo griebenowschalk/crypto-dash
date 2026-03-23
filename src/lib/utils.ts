@@ -15,6 +15,19 @@ export function formatPrice(price: number, currency: string = 'ZAR'): string {
   }).format(price);
 }
 
+export function formatCompactPrice(
+  price: number,
+  currency: string = 'ZAR'
+): string {
+  return new Intl.NumberFormat('en-ZA', {
+    style: 'currency',
+    currency,
+    notation: 'compact',
+    compactDisplay: 'short',
+    maximumFractionDigits: 1,
+  }).format(price);
+}
+
 export function formatCompact(num: number): string {
   return new Intl.NumberFormat('en-ZA', {
     notation: 'compact',

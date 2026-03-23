@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Dashboard } from '@/pages/Dashboard';
 import { createQueryClientWrapper } from '@/__test__/test-utils';
 
@@ -24,8 +25,8 @@ vi.mock('@tanstack/react-router', () => ({
 vi.mock('@/hooks/useTopCoins', () => ({
   useTopCoins: () => ({
     data: [
-      { id: '1', symbol: 'BTC', name: 'Bitcoin', imageUrl: '' },
-      { id: '2', symbol: 'ETH', name: 'Ethereum', imageUrl: '' },
+      { id: '1', symbol: 'BTC', name: 'Bitcoin', imageUrl: '/btc.png' },
+      { id: '2', symbol: 'ETH', name: 'Ethereum', imageUrl: '/eth.png' },
     ],
     isLoading: false,
   }),
@@ -51,6 +52,23 @@ vi.mock('@/hooks/useHistoricalData', () => ({
   useHistoricalData: () => ({ data: [], isLoading: false }),
 }));
 
+const setCurrentFavouriteMock = vi.fn();
+
+vi.mock('@/hooks/useFavouriteCoins', () => ({
+  useFavouriteCoins: () => ({
+    favourites: ['BTC', 'ETH'],
+    currentFavourite: 'BTC',
+    setCurrentFavourite: setCurrentFavouriteMock,
+    isFavourite: (coin: string) => ['BTC', 'ETH'].includes(coin),
+    toggleFavourite: vi.fn(),
+    addFavourite: vi.fn(),
+    removeFavourite: vi.fn(),
+    resetFavourites: vi.fn(),
+    firstVisit: false,
+    containsFavourite: vi.fn(),
+  }),
+}));
+
 describe('Dashboard', () => {
   it('renders welcome copy and top coins section', async () => {
     const { Wrapper } = createQueryClientWrapper();
@@ -72,8 +90,8 @@ describe('Dashboard', () => {
     render(<Dashboard />, { wrapper: Wrapper });
 
     await screen.findByRole('heading', { name: /welcome to cryptodash/i });
-    expect(screen.getByText('BTC')).toBeInTheDocument();
-    expect(screen.getByText('ETH')).toBeInTheDocument();
+    expect(screen.getAllByText('BTC').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('ETH').length).toBeGreaterThan(0);
   });
 
   it('renders chart section', async () => {
@@ -82,5 +100,16 @@ describe('Dashboard', () => {
 
     await screen.findByRole('heading', { name: /welcome to cryptodash/i });
     expect(screen.getByRole('heading', { name: /chart/i })).toBeInTheDocument();
+  });
+
+  it('sets current favourite from Feature button', async () => {
+    const user = userEvent.setup();
+    const { Wrapper } = createQueryClientWrapper();
+    render(<Dashboard />, { wrapper: Wrapper });
+
+    await screen.findByRole('heading', { name: /your favourites/i });
+    await user.click(screen.getByLabelText('Feature ETH chart'));
+
+    expect(setCurrentFavouriteMock).toHaveBeenCalledWith('ETH');
   });
 });

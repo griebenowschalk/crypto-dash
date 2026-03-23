@@ -1,4 +1,4 @@
-import type { Currency, TimeFrame } from '@/types/crypto';
+import type { TimeFrame } from '@/types/crypto';
 
 /** UI preset for historical OHLC charts (maps to CryptoCompare histo endpoints). */
 export type ChartTimeframePreset = {
@@ -18,6 +18,3 @@ export const CHART_TIMEFRAME_PRESETS: readonly ChartTimeframePreset[] = [
 /** Default tab in chart UIs (24H). */
 export const DEFAULT_CHART_TIMEFRAME_PRESET: ChartTimeframePreset =
   CHART_TIMEFRAME_PRESETS.find(p => p.label === '24H')!;
-
-/** Currency used in chart title + `useHistoricalData` (must match API). */
-export const PRICE_CHART_CURRENCY: Currency = 'USD';

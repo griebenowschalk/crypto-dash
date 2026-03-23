@@ -1,40 +1,34 @@
-import { useState, useEffect } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { getFavourites, setFavourites } from '@/lib/local-storage';
-import { FavouriteCoinsState } from '@/types/crypto';
-
-const MAX_FAVOURITES = 10;
-const DEFAULT_FAVOURITES = ['BTC', 'ETH', 'XMR'];
+import {
+  DEFAULT_FAVOURITES_STATE,
+  getFavouriteCoinsSnapshot,
+  MAX_FAVOURITES,
+  subscribeFavouriteCoins,
+  updateFavouriteCoinsState,
+} from '@/lib/favourite-coins-store';
 
 export function useFavouriteCoins() {
-  const [state, setState] = useState<FavouriteCoinsState>(() => {
-    const savedFavourites = getFavourites();
-
-    return (
-      savedFavourites || {
-        favourites: DEFAULT_FAVOURITES,
-        currentFavourite: DEFAULT_FAVOURITES[0],
-      }
-    );
-  });
+  const state = useSyncExternalStore(
+    subscribeFavouriteCoins,
+    getFavouriteCoinsSnapshot,
+    getFavouriteCoinsSnapshot
+  );
   const [firstVisit, setFirstVisit] = useState(() => {
     return !getFavourites();
   });
 
-  useEffect(() => {
-    setFavourites(state);
-  }, [state]);
-
   const addFavourite = (coin: string) => {
     if (state.favourites.includes(coin)) return;
     if (state.favourites.length >= MAX_FAVOURITES) return;
-    setState({
+    updateFavouriteCoinsState({
       ...state,
       favourites: [...state.favourites, coin],
     });
   };
 
   const removeFavourite = (coin: string) => {
-    setState(prevState => {
+    updateFavouriteCoinsState(prevState => {
       const newFavourites = prevState.favourites.filter(c => c !== coin);
       const currentFavourite =
         prevState.currentFavourite === coin
@@ -52,7 +46,7 @@ export function useFavouriteCoins() {
   const setCurrentFavourite = (coin: string) => {
     if (!isFavourite(coin)) return;
 
-    setState(prevState => {
+    updateFavouriteCoinsState(prevState => {
       return {
         ...prevState,
         currentFavourite: coin,
@@ -68,10 +62,7 @@ export function useFavouriteCoins() {
   };
 
   const resetFavourites = () => {
-    setState({
-      favourites: DEFAULT_FAVOURITES,
-      currentFavourite: DEFAULT_FAVOURITES[0],
-    });
+    updateFavouriteCoinsState(DEFAULT_FAVOURITES_STATE);
   };
 
   const isFavourite = (coin: string) => {
@@ -79,7 +70,7 @@ export function useFavouriteCoins() {
   };
 
   const toggleFavourite = (coin: string) => {
-    setState(prevState => {
+    updateFavouriteCoinsState(prevState => {
       if (prevState.favourites.includes(coin)) {
         const newFavourites = prevState.favourites.filter(c => c !== coin);
         const currentFavourite =

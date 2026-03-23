@@ -4,8 +4,13 @@ import { useState } from 'react';
 import { Logo } from './Logo';
 
 export const Header = () => {
+  const pathname =
+    typeof window !== 'undefined' ? window.location.pathname : '/dashboard';
+  const initialTab = pathname.startsWith('/settings')
+    ? 'settings'
+    : 'dashboard';
   const [activeTab, setActiveTab] = useState<'dashboard' | 'settings'>(
-    'dashboard'
+    initialTab
   );
 
   const styles = (tab: 'dashboard' | 'settings') =>
@@ -29,14 +34,24 @@ export const Header = () => {
       <Button
         variant="ghost"
         className={cn('h-auto p-2', styles('dashboard'))}
-        onClick={() => setActiveTab('dashboard')}
+        onClick={() => {
+          setActiveTab('dashboard');
+          if (window.location.pathname !== '/dashboard') {
+            window.location.assign('/dashboard');
+          }
+        }}
       >
         Dashboard
       </Button>
       <Button
         variant="ghost"
         className={cn('h-auto p-2', styles('settings'))}
-        onClick={() => setActiveTab('settings')}
+        onClick={() => {
+          setActiveTab('settings');
+          if (window.location.pathname !== '/settings') {
+            window.location.assign('/settings');
+          }
+        }}
       >
         Settings
       </Button>

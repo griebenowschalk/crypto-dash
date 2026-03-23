@@ -38,7 +38,8 @@ export interface FavouriteCoinsState {
 export interface CoinPriceResponse {
   Response: string;
   Message: string;
-  Data: Record<string, PriceRaw>;
+  RAW?: Record<string, Record<string, PriceRaw>>;
+  Data?: Record<string, PriceRaw>;
 }
 
 export interface CoinListResponse {
@@ -53,6 +54,17 @@ export interface CoinListResponse {
       ImageUrl: string;
     }
   >;
+}
+
+export interface TopCoinsResponse {
+  Data: Array<{
+    CoinInfo: {
+      Id: string;
+      Name: string;
+      FullName: string;
+      ImageUrl: string;
+    };
+  }>;
 }
 
 export interface PriceRaw {

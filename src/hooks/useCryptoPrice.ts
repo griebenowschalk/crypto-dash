@@ -1,11 +1,27 @@
 import { cryptoCompareAPI } from '@/lib/cryptocompare';
 import { cryptoCompareWebSocket } from '@/lib/cryptocompare-websocket';
-import { CoinPrice, Currency } from '@/types/crypto';
+import { CoinPrice, Currency, PriceRaw } from '@/types/crypto';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { useAppCurrency } from '@/hooks/useAppCurrency';
 
-export function useCryptoPrice(coin: string, currency: Currency = 'ZAR') {
+export function useCryptoPrice(coin: string, currencyOverride?: Currency) {
+  const { currency: appCurrency } = useAppCurrency();
+  const currency = currencyOverride ?? appCurrency;
   const [livePrice, setLivePrice] = useState<CoinPrice | null>(null);
+
+  const toCoinPrice = (raw: PriceRaw): CoinPrice => ({
+    price: raw.PRICE ?? 0,
+    change24h: raw.CHANGE24HOUR ?? 0,
+    changePct24h: raw.CHANGEPCT24HOUR ?? 0,
+    high24h: raw.HIGH24HOUR ?? 0,
+    low24h: raw.LOW24HOUR ?? 0,
+    volume24h: raw.VOLUME24HOURTO ?? 0,
+    lastUpdate: raw.LASTUPDATE ?? 0,
+    open24h: raw.OPEN24HOUR ?? 0,
+    marketCap: raw.MKTCAP ?? 0,
+  });
+
   const {
     data: initialPrice,
     isLoading,
@@ -20,17 +36,7 @@ export function useCryptoPrice(coin: string, currency: Currency = 'ZAR') {
   useEffect(() => {
     if (initialPrice) {
       Promise.resolve().then(() => {
-        setLivePrice({
-          price: initialPrice.PRICE ?? 0,
-          change24h: initialPrice.CHANGE24HOUR ?? 0,
-          changePct24h: initialPrice.CHANGEPCT24HOUR ?? 0,
-          high24h: initialPrice.HIGH24HOUR ?? 0,
-          low24h: initialPrice.LOW24HOUR ?? 0,
-          volume24h: initialPrice.VOLUME24HOURTO ?? 0,
-          lastUpdate: initialPrice.LASTUPDATE ?? 0,
-          open24h: initialPrice.OPEN24HOUR,
-          marketCap: initialPrice.MKTCAP ?? 0,
-        } as CoinPrice);
+        setLivePrice(toCoinPrice(initialPrice));
       });
     }
 
@@ -40,7 +46,8 @@ export function useCryptoPrice(coin: string, currency: Currency = 'ZAR') {
       currency,
       data => {
         setLivePrice(prev => {
-          if (!prev) return null;
+          // If REST seed failed/missing, bootstrap from first websocket tick.
+          if (!prev) return toCoinPrice(data);
           return {
             ...prev,
             price: data.PRICE ?? prev.price,
@@ -52,7 +59,7 @@ export function useCryptoPrice(coin: string, currency: Currency = 'ZAR') {
             lastUpdate: data.LASTUPDATE ?? prev.lastUpdate,
             open24h: data.OPEN24HOUR ?? prev.open24h,
             marketCap: data.MKTCAP ?? prev.marketCap,
-          } as CoinPrice;
+          };
         });
       }
     );

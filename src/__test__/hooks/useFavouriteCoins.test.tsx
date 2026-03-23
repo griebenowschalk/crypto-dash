@@ -145,7 +145,7 @@ describe('useFavouriteCoins', () => {
       result.current.addFavourite('SOL');
       result.current.resetFavourites();
     });
-    expect(result.current.favourites).toEqual(['BTC', 'ETH', 'XMR']);
+    expect(result.current.favourites).toEqual(['BTC', 'ETH']);
     expect(result.current.currentFavourite).toBe('BTC');
   });
 });

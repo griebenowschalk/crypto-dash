@@ -14,6 +14,7 @@ import {
   CoinInfo,
   PriceRaw,
   type CoinListResponse,
+  type TopCoinsResponse,
   Currency,
   CoinPriceResponse,
   HistoricalDataPoint,
@@ -28,6 +29,32 @@ class CryptoCompareAPI {
 
   constructor(apiKey: string) {
     this.apiKey = apiKey;
+  }
+
+  private normalizeImageUrl(imageUrl?: string): string {
+    if (!imageUrl) return '';
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    return `https://www.cryptocompare.com${imageUrl}`;
+  }
+
+  private extractRawPrice(
+    data: CoinPriceResponse,
+    symbol: string,
+    currency: Currency
+  ): PriceRaw {
+    const raw = data.RAW?.[symbol]?.[currency];
+    if (raw) {
+      return raw;
+    }
+
+    const direct = data.Data?.[symbol];
+    if (direct && typeof direct === 'object' && 'PRICE' in direct) {
+      return direct;
+    }
+
+    throw new Error(`No price payload for ${symbol}/${currency}`);
   }
 
   private async fetchData<T>(
@@ -82,7 +109,7 @@ class CryptoCompareAPI {
         id: coin.Id,
         symbol: coin.Symbol,
         name: coin.CoinName,
-        imageUrl: `https://www.cryptocompare.com${coin.ImageUrl}`,
+        imageUrl: this.normalizeImageUrl(coin.ImageUrl),
       }));
   }
 
@@ -94,15 +121,22 @@ class CryptoCompareAPI {
       fsyms: symbols.join(','),
       tsyms: currency,
     });
-    return data.Data;
+    return symbols.reduce<Record<string, PriceRaw>>((acc, symbol) => {
+      try {
+        acc[symbol] = this.extractRawPrice(data, symbol, currency);
+      } catch {
+        // Skip symbols that are not present in payload.
+      }
+      return acc;
+    }, {});
   }
 
   async getPrice(symbol: string, currency: Currency): Promise<PriceRaw> {
     const data = await this.fetchData<CoinPriceResponse>('/pricemultifull', {
-      fsym: symbol,
+      fsyms: symbol,
       tsyms: currency,
     });
-    return data.Data[symbol];
+    return this.extractRawPrice(data, symbol, currency);
   }
 
   async getHistoricalData(
@@ -117,30 +151,29 @@ class CryptoCompareAPI {
       day: '/v2/histoday',
     };
     const endpoint = endpoints[timeframe];
-    const data = await this.fetchData<{ Data?: HistoricalDataPoint[] }>(
-      endpoint,
-      {
-        fsym: symbol,
-        tsym: currency,
-        limit: limit.toString(),
-      }
-    );
-    return Array.isArray(data.Data) ? data.Data : [];
+    const data = await this.fetchData<{
+      Data?: { Data?: HistoricalDataPoint[] };
+    }>(endpoint, {
+      fsym: symbol,
+      tsym: currency,
+      limit: limit.toString(),
+    });
+    return Array.isArray(data.Data?.Data) ? data.Data!.Data! : [];
   }
 
   async getTopCoins(
     limit: number = 10,
     currency: Currency
   ): Promise<CoinInfo[]> {
-    const data = await this.fetchData<CoinListResponse>('/all/coinlist', {
+    const data = await this.fetchData<TopCoinsResponse>('/top/mktcapfull', {
       limit: limit.toString(),
       tsym: currency,
     });
-    return Object.values(data.Data).map(coin => ({
-      id: coin.Id,
-      symbol: coin.Symbol,
-      name: coin.CoinName,
-      imageUrl: `https://www.cryptocompare.com${coin.ImageUrl}`,
+    return data.Data.map(item => ({
+      id: item.CoinInfo.Id,
+      symbol: item.CoinInfo.Name,
+      name: item.CoinInfo.FullName,
+      imageUrl: this.normalizeImageUrl(item.CoinInfo.ImageUrl),
     }));
   }
 }

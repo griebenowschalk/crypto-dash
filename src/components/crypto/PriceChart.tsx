@@ -13,10 +13,10 @@ import { useHistoricalData } from '@/hooks/useHistoricalData';
 import {
   CHART_TIMEFRAME_PRESETS,
   DEFAULT_CHART_TIMEFRAME_PRESET,
-  PRICE_CHART_CURRENCY,
 } from '@/lib/chart-timeframes';
-import { formatPrice, formatTimestamp } from '@/lib/utils';
+import { formatCompactPrice, formatPrice, formatTimestamp } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useAppCurrency } from '@/hooks/useAppCurrency';
 
 interface PriceChartProps {
   symbol: string;
@@ -26,9 +26,10 @@ export function PriceChart({ symbol }: PriceChartProps) {
   const [activeFrame, setActiveFrame] = useState(
     DEFAULT_CHART_TIMEFRAME_PRESET
   );
+  const { currency } = useAppCurrency();
   const { data, isLoading } = useHistoricalData(
     symbol,
-    PRICE_CHART_CURRENCY,
+    currency,
     activeFrame.value,
     activeFrame.limit
   );
@@ -41,19 +42,19 @@ export function PriceChart({ symbol }: PriceChartProps) {
   const color = isPositive ? '#22c55e' : '#ef4444';
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
+    <Card className="bg-card/70 border shadow-sm">
+      <CardHeader className="flex flex-col gap-3 pb-2 sm:flex-row sm:items-center sm:justify-between">
         <CardTitle className="text-base">
-          {symbol} / {PRICE_CHART_CURRENCY}
+          {symbol} / {currency}
         </CardTitle>
-        <div className="flex gap-1">
+        <div className="bg-muted inline-flex w-fit gap-1 rounded-lg p-1">
           {CHART_TIMEFRAME_PRESETS.map(tf => (
             <button
               key={tf.label}
               onClick={() => setActiveFrame(tf)}
-              className={`rounded px-2 py-1 text-xs font-medium transition-colors ${
+              className={`rounded-md px-2.5 py-1 text-xs font-medium transition-all ${
                 activeFrame.label === tf.label
-                  ? 'bg-primary text-primary-foreground'
+                  ? 'bg-background text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -62,35 +63,46 @@ export function PriceChart({ symbol }: PriceChartProps) {
           ))}
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-2">
         {isLoading ? (
-          <Skeleton className="h-48 w-full" />
+          <Skeleton className="h-64 w-full" />
         ) : (
-          <ResponsiveContainer width="100%" height={200}>
-            <AreaChart data={chartData}>
+          <ResponsiveContainer width="100%" height={260}>
+            <AreaChart
+              data={chartData}
+              margin={{ top: 8, right: 6, left: 6, bottom: 0 }}
+            >
               <defs>
                 <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={color} stopOpacity={0.2} />
+                  <stop offset="5%" stopColor={color} stopOpacity={0.25} />
                   <stop offset="95%" stopColor={color} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                className="stroke-muted/60"
+              />
               <XAxis
                 dataKey="time"
                 tickFormatter={v => formatTimestamp(v, activeFrame.value)}
                 className="text-muted-foreground text-xs"
                 tick={{ fontSize: 11 }}
+                tickLine={false}
+                axisLine={false}
+                minTickGap={28}
               />
               <YAxis
-                tickFormatter={v => formatPrice(v, PRICE_CHART_CURRENCY)}
+                tickFormatter={v => formatCompactPrice(v, currency)}
                 className="text-muted-foreground"
                 tick={{ fontSize: 11 }}
-                width={70}
+                width={58}
+                tickLine={false}
+                axisLine={false}
               />
               <Tooltip
                 formatter={value =>
                   value != null && typeof value === 'number'
-                    ? [formatPrice(value, PRICE_CHART_CURRENCY), 'Price']
+                    ? [formatPrice(value, currency), 'Price']
                     : ['—', 'Price']
                 }
                 labelFormatter={v =>
@@ -101,6 +113,7 @@ export function PriceChart({ symbol }: PriceChartProps) {
                 contentStyle={{
                   background: 'hsl(var(--popover))',
                   border: '1px solid hsl(var(--border))',
+                  borderRadius: '8px',
                 }}
               />
               <Area
@@ -108,7 +121,7 @@ export function PriceChart({ symbol }: PriceChartProps) {
                 dataKey="price"
                 stroke={color}
                 fill="url(#colorGradient)"
-                strokeWidth={2}
+                strokeWidth={2.5}
                 dot={false}
               />
             </AreaChart>
