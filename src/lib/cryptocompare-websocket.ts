@@ -1,6 +1,5 @@
 import { PriceRaw } from '@/types/crypto';
 
-const API_KEY = import.meta.env.VITE_CRYPTOCOMPARE_API_KEY;
 const BASE_URL = 'wss://streamer.cryptocompare.com/v2';
 
 /**
@@ -17,7 +16,6 @@ const BASE_URL = 'wss://streamer.cryptocompare.com/v2';
  */
 
 class CryptoCompareWebSocket {
-  private apiKey: string;
   private ws: WebSocket | null = null;
   private subscriptions: Map<
     string,
@@ -27,15 +25,14 @@ class CryptoCompareWebSocket {
   private reconnectionAttempts = 0;
   private maxReconnectionAttempts = 5;
 
-  constructor(apiKey: string) {
-    this.apiKey = apiKey;
-    this.connect(this.apiKey);
+  constructor() {
+    this.connect();
   }
 
-  private connect(apiKey: string): void {
+  private connect(): void {
     if (this.ws?.readyState === WebSocket.OPEN) return;
 
-    this.ws = new WebSocket(`${BASE_URL}?api_key=${apiKey}`);
+    this.ws = new WebSocket(BASE_URL);
 
     this.ws.onopen = () => {
       console.log('WebSocket connected');
@@ -89,7 +86,7 @@ class CryptoCompareWebSocket {
     if (this.reconnectionAttempts < this.maxReconnectionAttempts) {
       this.reconnectionAttempts++;
       const delay = 1000 * Math.pow(2, this.reconnectionAttempts);
-      setTimeout(() => this.connect(this.apiKey || API_KEY), delay);
+      setTimeout(() => this.connect(), delay);
     }
   }
 
@@ -162,4 +159,4 @@ class CryptoCompareWebSocket {
   }
 }
 
-export const cryptoCompareWebSocket = new CryptoCompareWebSocket(API_KEY!);
+export const cryptoCompareWebSocket = new CryptoCompareWebSocket();

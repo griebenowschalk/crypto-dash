@@ -21,15 +21,16 @@ import {
   TimeFrame,
 } from '@/types/crypto';
 
-const API_KEY = import.meta.env.VITE_CRYPTOCOMPARE_API_KEY;
-const BASE_URL = 'https://min-api.cryptocompare.com/data';
+const DIRECT_BASE_URL = 'https://min-api.cryptocompare.com/data';
+const NETLIFY_PROXY_BASE_URL = '/.netlify/functions/cryptocompare';
+const BASE_URL =
+  import.meta.env.VITE_CRYPTOCOMPARE_PROXY_BASE_URL ??
+  (import.meta.env.PROD ? NETLIFY_PROXY_BASE_URL : DIRECT_BASE_URL);
 
 class CryptoCompareAPI {
-  private apiKey: string;
-
-  constructor(apiKey: string) {
-    this.apiKey = apiKey;
-  }
+  private readonly baseUrl = BASE_URL.endsWith('/')
+    ? BASE_URL.slice(0, -1)
+    : BASE_URL;
 
   private normalizeImageUrl(imageUrl?: string): string {
     if (!imageUrl) return '';
@@ -61,16 +62,14 @@ class CryptoCompareAPI {
     endpoint: string,
     params: Record<string, string> = {}
   ): Promise<T> {
-    const queryParams = new URLSearchParams({
-      ...params,
-      api_key: this.apiKey,
-    });
+    const queryParams = new URLSearchParams(params);
+    const requestUrl = `${this.baseUrl}${endpoint}?${queryParams}`;
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     try {
-      const response = await fetch(`${BASE_URL}${endpoint}?${queryParams}`, {
+      const response = await fetch(requestUrl, {
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
@@ -178,4 +177,4 @@ class CryptoCompareAPI {
   }
 }
 
-export const cryptoCompareAPI = new CryptoCompareAPI(API_KEY!);
+export const cryptoCompareAPI = new CryptoCompareAPI();
