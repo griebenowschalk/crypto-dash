@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://react.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-B2387B?logo=tailwind-css)](https://tailwindcss.com/)
 [![CI](https://github.com/griebenowschalk/crypto-dash/actions/workflows/ci.yml/badge.svg)](https://github.com/griebenowschalk/crypto-dash/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/griebenowschalk/crypto-dash/badge.svg?branch=main)](https://codecov.io/gh/griebenowschalk/crypto-dash)
 

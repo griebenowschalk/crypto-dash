@@ -10,12 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root';
 import { Route as SettingsRouteImport } from './routes/settings';
+import { Route as MarketsRouteImport } from './routes/markets';
 import { Route as DashboardRouteImport } from './routes/dashboard';
 import { Route as IndexRouteImport } from './routes/index';
+import { Route as CoinSymbolRouteImport } from './routes/coin/$symbol';
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any);
+const MarketsRoute = MarketsRouteImport.update({
+  id: '/markets',
+  path: '/markets',
   getParentRoute: () => rootRouteImport,
 } as any);
 const DashboardRoute = DashboardRouteImport.update({
@@ -28,35 +35,54 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any);
+const CoinSymbolRoute = CoinSymbolRouteImport.update({
+  id: '/coin/$symbol',
+  path: '/coin/$symbol',
+  getParentRoute: () => rootRouteImport,
+} as any);
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute;
   '/dashboard': typeof DashboardRoute;
+  '/markets': typeof MarketsRoute;
   '/settings': typeof SettingsRoute;
+  '/coin/$symbol': typeof CoinSymbolRoute;
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute;
   '/dashboard': typeof DashboardRoute;
+  '/markets': typeof MarketsRoute;
   '/settings': typeof SettingsRoute;
+  '/coin/$symbol': typeof CoinSymbolRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   '/': typeof IndexRoute;
   '/dashboard': typeof DashboardRoute;
+  '/markets': typeof MarketsRoute;
   '/settings': typeof SettingsRoute;
+  '/coin/$symbol': typeof CoinSymbolRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: '/' | '/dashboard' | '/settings';
+  fullPaths: '/' | '/dashboard' | '/markets' | '/settings' | '/coin/$symbol';
   fileRoutesByTo: FileRoutesByTo;
-  to: '/' | '/dashboard' | '/settings';
-  id: '__root__' | '/' | '/dashboard' | '/settings';
+  to: '/' | '/dashboard' | '/markets' | '/settings' | '/coin/$symbol';
+  id:
+    | '__root__'
+    | '/'
+    | '/dashboard'
+    | '/markets'
+    | '/settings'
+    | '/coin/$symbol';
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   DashboardRoute: typeof DashboardRoute;
+  MarketsRoute: typeof MarketsRoute;
   SettingsRoute: typeof SettingsRoute;
+  CoinSymbolRoute: typeof CoinSymbolRoute;
 }
 
 declare module '@tanstack/react-router' {
@@ -66,6 +92,13 @@ declare module '@tanstack/react-router' {
       path: '/settings';
       fullPath: '/settings';
       preLoaderRoute: typeof SettingsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    '/markets': {
+      id: '/markets';
+      path: '/markets';
+      fullPath: '/markets';
+      preLoaderRoute: typeof MarketsRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     '/dashboard': {
@@ -82,13 +115,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    '/coin/$symbol': {
+      id: '/coin/$symbol';
+      path: '/coin/$symbol';
+      fullPath: '/coin/$symbol';
+      preLoaderRoute: typeof CoinSymbolRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
+  MarketsRoute: MarketsRoute,
   SettingsRoute: SettingsRoute,
+  CoinSymbolRoute: CoinSymbolRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
