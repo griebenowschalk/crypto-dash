@@ -20,7 +20,7 @@ export default [
   js.configs.recommended,
   {
     files: ['**/*.{ts,tsx}'],
-    ignores: ['*.config.ts'],
+    ignores: ['*.config.ts', '*.test.ts', '*.test.tsx'],
     languageOptions: {
       parser: tsparser,
       parserOptions: {
