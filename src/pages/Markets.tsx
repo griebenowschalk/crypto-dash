@@ -37,7 +37,7 @@ export function Markets() {
         />
       </div>
 
-      <div className="overflow-hidden rounded-lg border">
+      <div className="overflow-hidden overflow-x-scroll rounded-lg border">
         <table className="w-full">
           <thead className="bg-muted/30">
             <tr className="text-left tracking-wide uppercase">
