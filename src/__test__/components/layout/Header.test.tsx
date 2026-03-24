@@ -27,4 +27,19 @@ describe('Header', () => {
 
     expect(settings.className).toMatch(/font-bold/);
   });
+
+  it('toggles mobile burger menu state', async () => {
+    const user = userEvent.setup();
+    render(<Header />);
+
+    const toggle = screen.getByRole('button', {
+      name: /open navigation menu/i,
+    });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+
+    await user.click(toggle);
+    expect(
+      screen.getByRole('button', { name: /close navigation menu/i })
+    ).toHaveAttribute('aria-expanded', 'true');
+  });
 });
