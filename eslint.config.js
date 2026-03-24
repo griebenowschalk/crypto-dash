@@ -15,6 +15,7 @@ export default [
       'netlify/functions/',
       'dev-dist',
       'docs/*',
+      '.storybook/*',
     ],
   },
   js.configs.recommended,
