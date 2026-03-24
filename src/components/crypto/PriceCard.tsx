@@ -3,7 +3,7 @@ import { TrendingUp, TrendingDown, Star } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Large, Muted, Small } from '@/components/typography';
 import { Sparkline } from './Sparkline';
-import { formatPrice, formatPercentage } from '@/lib/utils';
+import { formatCompactPrice, formatPercentage, formatPrice } from '@/lib/utils';
 import { useCryptoPrice } from '@/hooks/useCryptoPrice';
 import { useHistoricalData } from '@/hooks/useHistoricalData';
 import { useFavouriteCoins } from '@/hooks/useFavouriteCoins';
@@ -43,6 +43,12 @@ export function PriceCard({
     : 0;
 
   const positive = pctValue >= 0;
+  const displayPrice =
+    priceValue === null
+      ? '—'
+      : Math.abs(priceValue) >= 1_000_000
+        ? formatCompactPrice(priceValue, currency)
+        : formatPrice(priceValue, currency);
 
   return (
     <Link to="/coin/$symbol" params={{ symbol: coin.symbol }}>
@@ -80,8 +86,8 @@ export function PriceCard({
           </div>
 
           <div className="mb-3">
-            <Large className="text-xl font-bold tracking-tight">
-              {priceValue !== null ? formatPrice(priceValue, currency) : '—'}
+            <Large className="max-w-full truncate text-xl font-bold tracking-tight">
+              {displayPrice}
             </Large>
             <Small
               className={`mt-1 flex items-center gap-1.5 font-medium ${positive ? 'text-green-500' : 'text-red-500'}`}
