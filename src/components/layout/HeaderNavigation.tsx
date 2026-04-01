@@ -1,4 +1,5 @@
 import { Menu, X } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -54,13 +55,18 @@ export function HeaderNavigation({
           <Button
             key={item.tab}
             variant="ghost"
+            asChild
             className={styles(item.tab)}
-            onClick={() => {
-              onNavigate(item.tab);
-              setIsOpen(false);
-            }}
           >
-            {item.label}
+            <Link
+              to={`/${item.tab}`}
+              onClick={() => {
+                onNavigate(item.tab);
+                setIsOpen(false);
+              }}
+            >
+              {item.label}
+            </Link>
           </Button>
         ))}
       </div>

@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import type { HeaderTab } from './HeaderNavigation';
 import { HeaderNavigation } from './HeaderNavigation';
@@ -13,21 +14,13 @@ export const Header = () => {
       : 'dashboard';
   const [activeTab, setActiveTab] = useState<HeaderTab>(initialTab);
 
-  const handleNavigate = (tab: HeaderTab) => {
-    setActiveTab(tab);
-    const targetPath = `/${tab}`;
-    if (window.location.pathname !== targetPath) {
-      window.location.assign(targetPath);
-    }
-  };
-
   return (
     <header className="grid grid-cols-[1fr_auto] items-center gap-2 py-8 sm:gap-4">
-      <a href="/" aria-label="CryptoDash">
+      <Link to="/" aria-label="CryptoDash">
         <Logo />
-      </a>
+      </Link>
 
-      <HeaderNavigation activeTab={activeTab} onNavigate={handleNavigate} />
+      <HeaderNavigation activeTab={activeTab} onNavigate={setActiveTab} />
     </header>
   );
 };
